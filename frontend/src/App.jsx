@@ -1,23 +1,44 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useState } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function Login() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200">
-      <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center w-full max-w-md">
-        <h1 className="text-4xl font-bold text-blue-700 mb-4">Vite + React + Tailwind</h1>
-        <p className="text-gray-600 mb-6">Tailwind CSS is now integrated! 🎉</p>
-        <button
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition mb-4"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-        <p className="text-sm text-gray-500">Edit <code>src/App.jsx</code> and save to test HMR</p>
-      </div>
-      <footer className="mt-8 text-gray-400 text-xs">Cloud Trading Robot App &copy; 2024</footer>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-2xl font-bold mb-4">Login</h2>
+      {/* TODO: Add login form */}
+      <p className="text-gray-500">Login form goes here.</p>
     </div>
+  )
+}
+
+function Register() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-2xl font-bold mb-4">Register</h2>
+      {/* TODO: Add register form */}
+      <p className="text-gray-500">Registration form goes here.</p>
+    </div>
+  )
+}
+
+function Dashboard() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+      <p className="text-gray-500">Welcome to your dashboard!</p>
+    </div>
+  )
+}
+
+function App() {
+  // TODO: Add auth context and protected route logic
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   )
 }
 
