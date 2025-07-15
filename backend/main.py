@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from passlib.context import CryptContext
 from jose import JWTError, jwt
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
@@ -11,6 +11,7 @@ from db import get_db
 from models import User as DBUser
 import models
 import db as _db
+import json
 
 # Secret key for JWT (in production, use a secure method to store this)
 SECRET_KEY = "your-secret-key"
@@ -140,3 +141,136 @@ async def read_users_me(current_user: DBUser = Depends(get_current_user)):
 @app.get("/protected")
 async def protected_route(current_user: DBUser = Depends(get_current_user)):
     return {"message": f"Hello, {current_user.username}! This is a protected route."}
+
+# Pydantic models for trading features
+class StrategyBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    parameters: Optional[dict] = None
+
+class StrategyCreate(StrategyBase):
+    pass
+
+class StrategyOut(StrategyBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class TradeBase(BaseModel):
+    symbol: str
+    volume: float
+    price: float
+    side: str
+    strategy_id: int
+
+class TradeCreate(TradeBase):
+    pass
+
+class TradeOut(TradeBase):
+    id: int
+    timestamp: datetime
+    class Config:
+        orm_mode = True
+
+class BrokerConnectionBase(BaseModel):
+    broker_name: str
+    api_key: str
+
+class BrokerConnectionCreate(BrokerConnectionBase):
+    pass
+
+class BrokerConnectionOut(BrokerConnectionBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+# --- Strategy Endpoints ---
+@app.post("/strategies/", response_model=StrategyOut)
+async def create_strategy(strategy: StrategyCreate, current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    db_strategy = models.Strategy(
+        name=strategy.name,
+        description=strategy.description,
+        parameters=json.dumps(strategy.parameters) if strategy.parameters else None,
+        owner_id=current_user.id,
+    )
+    db.add(db_strategy)
+    await db.commit()
+    await db.refresh(db_strategy)
+    return StrategyOut(
+        id=db_strategy.id,
+        name=db_strategy.name,
+        description=db_strategy.description,
+        parameters=json.loads(db_strategy.parameters) if db_strategy.parameters else None,
+    )
+
+@app.get("/strategies/", response_model=List[StrategyOut])
+async def list_strategies(current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    result = await db.execute(select(models.Strategy).where(models.Strategy.owner_id == current_user.id))
+    strategies = result.scalars().all()
+    return [StrategyOut(
+        id=s.id,
+        name=s.name,
+        description=s.description,
+        parameters=json.loads(s.parameters) if s.parameters else None,
+    ) for s in strategies]
+
+@app.delete("/strategies/{strategy_id}")
+async def delete_strategy(strategy_id: int, current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    result = await db.execute(select(models.Strategy).where(models.Strategy.id == strategy_id, models.Strategy.owner_id == current_user.id))
+    strategy = result.scalars().first()
+    if not strategy:
+        raise HTTPException(status_code=404, detail="Strategy not found")
+    await db.delete(strategy)
+    await db.commit()
+    return {"ok": True}
+
+# --- Trade Endpoints ---
+@app.post("/trades/", response_model=TradeOut)
+async def create_trade(trade: TradeCreate, current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    db_trade = models.Trade(
+        symbol=trade.symbol,
+        volume=trade.volume,
+        price=trade.price,
+        side=trade.side,
+        user_id=current_user.id,
+        strategy_id=trade.strategy_id,
+    )
+    db.add(db_trade)
+    await db.commit()
+    await db.refresh(db_trade)
+    return TradeOut.from_orm(db_trade)
+
+@app.get("/trades/", response_model=List[TradeOut])
+async def list_trades(current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    result = await db.execute(select(models.Trade).where(models.Trade.user_id == current_user.id))
+    trades = result.scalars().all()
+    return [TradeOut.from_orm(t) for t in trades]
+
+# --- Broker Connection Endpoints ---
+@app.post("/brokers/", response_model=BrokerConnectionOut)
+async def create_broker(broker: BrokerConnectionCreate, current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    db_broker = models.BrokerConnection(
+        broker_name=broker.broker_name,
+        api_key=broker.api_key,
+        user_id=current_user.id,
+    )
+    db.add(db_broker)
+    await db.commit()
+    await db.refresh(db_broker)
+    return BrokerConnectionOut.from_orm(db_broker)
+
+@app.get("/brokers/", response_model=List[BrokerConnectionOut])
+async def list_brokers(current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    result = await db.execute(select(models.BrokerConnection).where(models.BrokerConnection.user_id == current_user.id))
+    brokers = result.scalars().all()
+    return [BrokerConnectionOut.from_orm(b) for b in brokers]
+
+@app.delete("/brokers/{broker_id}")
+async def delete_broker(broker_id: int, current_user: DBUser = Depends(get_current_user), db=Depends(get_db)):
+    result = await db.execute(select(models.BrokerConnection).where(models.BrokerConnection.id == broker_id, models.BrokerConnection.user_id == current_user.id))
+    broker = result.scalars().first()
+    if not broker:
+        raise HTTPException(status_code=404, detail="Broker not found")
+    await db.delete(broker)
+    await db.commit()
+    return {"ok": True}
