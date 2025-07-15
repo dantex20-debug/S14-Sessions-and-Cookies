@@ -1,14 +1,31 @@
 version: '3.8'
 services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: traderpass
+      POSTGRES_DB: traderdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
   backend:
     build: ./backend
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://trader:traderpass@postgres:5432/traderdb
+    depends_on:
+      - postgres
   frontend:
     build: ./frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
+volumes:
+  pgdata:
