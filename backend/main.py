@@ -5,13 +5,17 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from typing import Optional
 from datetime import datetime, timedelta
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.future import select
+from db import get_db
+from models import User as DBUser
+import models
+import db as _db
 
 # Secret key for JWT (in production, use a secure method to store this)
 SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-fake_users_db = {}
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
@@ -37,21 +41,18 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-# Utility functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-    return None
+async def get_user_by_username(db, username: str):
+    result = await db.execute(select(DBUser).where(DBUser.username == username))
+    return result.scalars().first()
 
-def authenticate_user(db, username: str, password: str):
-    user = get_user(db, username)
+async def authenticate_user(db, username: str, password: str):
+    user = await get_user_by_username(db, username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -68,7 +69,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -81,26 +82,40 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username)
+    user = await get_user_by_username(db, username)
     if user is None:
         raise credentials_exception
     return user
 
-# Routes
 @app.post("/register", response_model=User)
-def register(user: UserCreate):
-    if user.username in fake_users_db:
+async def register(user: UserCreate, db=Depends(get_db)):
+    db_user = await get_user_by_username(db, user.username)
+    if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
     hashed_password = get_password_hash(user.password)
-    user_dict = user.dict()
-    user_dict.pop("password")
-    user_dict["hashed_password"] = hashed_password
-    fake_users_db[user.username] = user_dict
-    return User(**user_dict)
+    new_user = DBUser(
+        username=user.username,
+        email=user.email,
+        full_name=user.full_name,
+        hashed_password=hashed_password,
+    )
+    db.add(new_user)
+    try:
+        await db.commit()
+        await db.refresh(new_user)
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=400, detail="Username or email already registered")
+    return User(
+        username=new_user.username,
+        email=new_user.email,
+        full_name=new_user.full_name,
+        disabled=not new_user.is_active,
+    )
 
 @app.post("/token", response_model=Token)
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db=Depends(get_db)):
+    user = await authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -114,9 +129,14 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.get("/users/me", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
+async def read_users_me(current_user: DBUser = Depends(get_current_user)):
+    return User(
+        username=current_user.username,
+        email=current_user.email,
+        full_name=current_user.full_name,
+        disabled=not current_user.is_active,
+    )
 
 @app.get("/protected")
-async def protected_route(current_user: User = Depends(get_current_user)):
+async def protected_route(current_user: DBUser = Depends(get_current_user)):
     return {"message": f"Hello, {current_user.username}! This is a protected route."}
