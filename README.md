@@ -1,42 +1,53 @@
-# 🎮 Pretty Girls Game Collection - 
+# Cloud Trading Robot Platform (South Africa)
 
-Welcome to the **Pretty Girls Game Collection** 🧩 — an all-in-one hub for fans of vibrant visuals and fun gameplay! This repository allows you to explore and enjoy a rich library of engaging games, featuring charming characters and captivating stories.
+## Features
+- Vite + React + Tailwind frontend
+- FastAPI backend with JWT authentication
+- Dockerized for local development
+- GitHub Actions CI
 
-## 🌍 OS Compatibility Table
+## Local Development
 
-| OS            | Supported | Keywords                                 |
-|---------------|:---------:|------------------------------------------|
-| Windows 10/11 |    ✅     | Windows games, PC gaming, DirectX support|
-| macOS (M1/M2) |    ✅     | Mac gaming, Apple Silicon, ARM64 games   |
-| Linux (Ubuntu)|    ✅     | Linux games, SteamOS, cross-platform     |
+### Prerequisites
+- Node.js 20+
+- Python 3.11+
+- Docker & Docker Compose (for containerized dev)
 
-## ⭐ Feature List
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- 🌟 **Exclusive Game Collection** – Enjoy a curated library of beautiful heroines and entertaining puzzles.
-- 💡 **Instant Loader** – Simple launcher, minimal setup required.
-- 🎨 **High-Quality Graphics** – Enhanced artwork in all titles.
-- 🔒 **Safety Replacement** – 100% functional, no paid activation necessary!
-- 🌐 **Multilingual** – Multiple language packs included.
+### Backend
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install fastapi uvicorn[standard] python-jose[cryptography] passlib[bcrypt]
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-## 📥 Installation
+### Full Stack (Docker Compose)
+```bash
+docker-compose up --build
+```
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-1. Download **Loader.rar** from the repository.
-2. Extract the archive anywhere on your computer.
-3. Launch `Loader.exe` (Windows), open with Wine (Linux/Mac).
-4. Follow the prompts to browse and play!
+## API Endpoints
+- `POST /api/register` — Register new user
+- `POST /api/token` — Login, returns JWT
+- `GET /api/users/me` — Get current user (JWT required)
+- `GET /api/protected` — Example protected route
 
-## 🏷️ SEO-Friendly Keywords
+## CI/CD
+- GitHub Actions: `.github/workflows/ci.yml` runs lint/build on push/PR
 
-Pretty Girls games free, download visual novel, Japanese anime game collection, bishoujo series, free indie games, no activation needed, cross-platform, loader program, anime puzzle games, Windows Mac Linux gaming.
-
-## ⚠️ Disclaimer
-
-This package is shared for educational and preservation purposes only. Redistribution or commercial use is not supported. Please support official releases to encourage creators!
-
-## 📜 MIT License
-
-This project is licensed under the [MIT License (2025)](https://opensource.org/licenses/MIT). Use at your own risk.
+## Next Steps
+- Add real database (PostgreSQL, etc.)
+- Add broker integrations, ML, dashboards, etc.
 
 ---
-
-Enjoy the world of Pretty Girls and have endless fun! 💖
+MIT License
