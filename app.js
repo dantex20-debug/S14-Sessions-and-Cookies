@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const User = require("./models/user");
@@ -22,6 +23,7 @@ const catchErrAsync = require("./utils/catchErrAsync");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
 
 // dummy User selector
 const USER_ID = new ObjectId("68c59cebf2b7f6e17ff9ea08");
