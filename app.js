@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 require("dotenv").config();
 
 const User = require("./models/user");
@@ -19,11 +20,19 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
+const required = require("./utils/requireEnvVar");
 const catchErrAsync = require("./utils/catchErrAsync");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
+app.use(
+  session({
+    secret: required("SESSION_HASH"),
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // dummy User selector
 const USER_ID = new ObjectId("68c59cebf2b7f6e17ff9ea08");
