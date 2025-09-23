@@ -1,13 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+const required = require("../../utils/requireEnvVar");
 const newError = require("../../utils/newError");
-
-function required(name) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing .env var: ${name}`);
-  return v;
-}
 
 function buildAtlasUri() {
   const user = required("MONGO_USER");
