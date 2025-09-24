@@ -10,13 +10,18 @@ function buildAtlasUri() {
   return `mongodb+srv://${user}:${pwd}@nodejs-course.tvid3w8.mongodb.net/s14-shop?retryWrites=true&w=majority&appName=NodeJS-Course`;
 }
 
+function getMongoDB_URI() {
+  let uri;
+  if (required("USE_MONGODB_ATLAS") === "true") uri = buildAtlasUri();
+  else uri = required("MONGODB_URI");
+
+  return uri;
+}
+
 // * connecting to the 'shop' database using Mongoose
 async function mongoConnect(callback) {
   try {
-    let uri;
-    if (process.env.USE_MONGODB_ATLAS === "true") uri = buildAtlasUri();
-    else uri = process.env.MONGODB_URI;
-
+    const uri = getMongoDB_URI();
     if (typeof callback === "function") callback();
 
     return await mongoose.connect(uri);
@@ -32,4 +37,4 @@ function close() {
   return mongoose.connection.close();
 }
 
-module.exports = { mongoConnect, close, mongoose };
+module.exports = { mongoConnect, close, mongoose, getMongoDB_URI };
