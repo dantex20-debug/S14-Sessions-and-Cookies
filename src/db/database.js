@@ -7,7 +7,11 @@ const newError = require("../../utils/newError");
 function buildAtlasUri() {
   const user = required("MONGO_USER");
   const pwd = required("MONGO_PASSWORD");
-  return `mongodb+srv://${user}:${pwd}@nodejs-course.tvid3w8.mongodb.net/s14-shop?retryWrites=true&w=majority&appName=NodeJS-Course`;
+  const host = required("MONGO_HOST");
+  const db = required("MONGO_DB");
+  const appName = required("MONGO_APPNAME");
+
+  return `mongodb+srv://${user}:${pwd}@${host}/${db}?retryWrites=true&w=majority&appName=${appName}`;
 }
 
 function getMongoDB_URI() {
