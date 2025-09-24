@@ -12,3 +12,9 @@ exports.postLogin = (req, res, next) => {
   req.session.loggedIn = true;
   res.redirect("/");
 };
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy((err) => {
+    res.redirect("/");
+  });
+};
