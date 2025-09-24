@@ -11,6 +11,7 @@
           >Products</a
         >
       </li>
+      <% if (typeof loggedIn !== "undefined" && loggedIn) { %>
       <li class="main-header__item">
         <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
       </li>
@@ -19,7 +20,6 @@
           >Orders</a
         >
       </li>
-      <% if (typeof loggedIn !== "undefined" && loggedIn) { %>
       <li class="main-header__item">
         <a
           class="<%= path === '/admin/add-product' ? 'active' : '' %>"
@@ -36,7 +36,6 @@
       </li>
       <% } %>
     </ul>
-    <% if (typeof loggedIn !== "undefined" && !loggedIn) { %>
     <ul class="main-header__item-list">
       <% if (!loggedIn) { %>
       <li class="main-header__item">
@@ -53,7 +52,6 @@
       </li>
       <% } %>
     </ul>
-    <% } %>
   </nav>
 </header>
 
