@@ -2,16 +2,23 @@ const path = require("path");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 require("dotenv").config();
 
 const User = require("./models/user");
 
 const errorController = require("./controllers/error");
 
-const { mongoConnect } = require("./src/db/database");
+const { mongoConnect, getMongoDB_URI } = require("./src/db/database");
 const ObjectId = require("mongodb").ObjectId;
 
+const MongoDB_URI = getMongoDB_URI();
+
 const app = express();
+const store = new MongoDBStore({
+  uri: MongoDB_URI,
+  collection: "sessions",
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -31,6 +38,8 @@ app.use(
     secret: required("SESSION_HASH"),
     resave: false,
     saveUninitialized: false,
+    store,
+    // cookie: {}
   })
 );
 
