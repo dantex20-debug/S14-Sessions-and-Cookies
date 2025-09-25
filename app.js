@@ -45,7 +45,9 @@ app.use(
 // ! user authentication will be implemented in the future
 app.use(
   catchErrAsync(async (req, res, next) => {
-    let user = await User.findById(required("MONGODB_EXAMPLE_USER_ID"));
+    if (!req.session.user) return next();
+
+    let user = await User.findById(req.session.user._id);
 
     req.user = user;
     next();
