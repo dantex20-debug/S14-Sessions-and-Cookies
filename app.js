@@ -10,7 +10,6 @@ const User = require("./models/user");
 const errorController = require("./controllers/error");
 
 const { mongoConnect, getMongoDB_URI } = require("./src/db/database");
-const ObjectId = require("mongodb").ObjectId;
 
 const MongoDB_URI = getMongoDB_URI();
 
@@ -43,26 +42,11 @@ app.use(
   })
 );
 
-// dummy User selector
-const USER_ID = new ObjectId("68c59cebf2b7f6e17ff9ea08");
-const EXAMPLE_USER = {
-  name: "Igor",
-  email: "test@example.com",
-  cart: {
-    items: [],
-  },
-};
-
 // ! user authentication will be implemented in the future
 app.use(
   catchErrAsync(async (req, res, next) => {
-    let user = await User.findById(USER_ID);
-    if (!user) {
-      user = await User.create({
-        _id: USER_ID,
-        ...EXAMPLE_USER,
-      });
-    }
+    let user = await User.findById(required("MONGODB_EXAMPLE_USER_ID"));
+
     req.user = user;
     next();
   })
