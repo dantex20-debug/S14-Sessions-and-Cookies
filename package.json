@@ -11,7 +11,7 @@
     "db:down": "docker compose down -v",
     "db:reset": "docker compose down -v && docker compose up -d",
     "start-server": "node app.js",
-    "test:db": "node scripts/test-db.cjs"
+    "db:test": "node scripts/test-db.cjs"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
